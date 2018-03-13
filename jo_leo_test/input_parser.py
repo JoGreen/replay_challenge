@@ -1,4 +1,4 @@
-import jo_leo_test.Triangle
+import jo_leo_test.triangle
 
 
 def parse_file(path):
@@ -15,7 +15,7 @@ def parse_file(path):
             pass
         else:
             split = line.split(" ")
-            triangles.append(jo_leo_test.Triangle.triangle(int(split[0]), int(split[1]), int(split[2]), int(split[3]), int(split[4]), int(split[5]) ))
+            triangles.append(jo_leo_test.triangle.triangle(int(split[0]), int(split[1]), int(split[2]), int(split[3]), int(split[4]), int(split[5])))
         i += 1
     return source, target, triangles
 
