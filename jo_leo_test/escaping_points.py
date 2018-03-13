@@ -12,5 +12,8 @@ def find_points(v1, v2, v3):
             for y in coordinates_y:
                 points.append((x,y) )
 
+    print(len(points))
+
     points = set(points)
     return points
+
