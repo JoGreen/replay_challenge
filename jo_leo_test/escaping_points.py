@@ -16,3 +16,4 @@ def find_points(v1, v2, v3):
 
     points = set(points)
     return points
+
