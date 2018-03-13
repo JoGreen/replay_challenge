@@ -4,6 +4,9 @@ class Triangle:
         self.v1 = (x1,y1)
         self.v2 = (x2,y2)
 
+    def get_vertices(self):
+        return self.v0, self.v1, self.v2
+
     def contains(self, x, y):
         points = [ self.v0, self.v1, self.v2 ]
         n = len(points)
