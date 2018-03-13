@@ -1,4 +1,4 @@
-from jo_leo_test import Triangle
+from jo_leo_test.triangle import triangle
 from jo_leo_test import escaping_points
 from jo_leo_test.input_parser  import parse_file
 
