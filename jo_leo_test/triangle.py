@@ -1,3 +1,5 @@
+import itertools
+
 class Triangle:
     def __init__(self, x0, y0, x1, y1, x2, y2):
         self.v0 = (x0,y0)
@@ -6,6 +8,14 @@ class Triangle:
 
     def get_vertices(self):
         return self.v0, self.v1, self.v2
+
+    def bounding_box(self):
+        max_coord = []
+        min_coord = []
+        for coords in zip(*[self.v0, self.v1, self.v2]):
+            max_coord.append(max(coords))
+            min_coord.append(min(coords))
+        return list(zip(min_coord, max_coord))
 
     def contains(self, t):
         # type:(tuple)->bool
@@ -26,20 +36,16 @@ class Triangle:
             p1x, p1y = p2x, p2y
         return inside
 
-    def find_escaping_points(self, v1, v2, v3):
+    def find_escaping_points(self):
         # type:(tuple, tuple, tuple)->set
         points = []
-        for v in [v1, v2, v3]:
+        for v in [self.v0, self.v1, self.v2]:
             x, y = v
             coordinates_x = [x - 1, x, x + 1]
             coordinates_y = [y - 1, y, y + 1]
 
-            for px in coordinates_x:
-                for py in coordinates_y:
-                    p = px, py
-                    if p != v:
-                        if not self.contains(p):
-                            points.append(p)
-
-        points = set(points)
+            for escape_p in zip(coordinates_x, coordinates_y):
+                if escape_p != (x,y):
+                    if not self.contains(escape_p):
+                        points.append(escape_p)
         return points

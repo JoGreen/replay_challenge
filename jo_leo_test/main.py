@@ -7,11 +7,18 @@ import time, tqdm
 import itertools
 from networkx.algorithms import has_path
 
-def remove_useless_points(tr, point):
-    #type:(Triangle, list)->tuple or None
-    if tr.contains(point):
-        print ('point added to black list')
-        return point
+def is_point_useful(tr, point):
+    #type:(Triangle, list)-> bool
+    x, y  = point
+    ## check first the bounding box of the triangle
+    b_box = tr.bounding_box()
+    Xmin, Xmax = b_box[0]
+    Ymin, Ymax = b_box[1]
+    if x < Xmin or x > Xmax or y < Ymin or y > Ymax :
+     #Definitely not within the polygon!
+        return True
+    ##else check accurately inside the polygon
+    return not tr.contains(point)
 
 
 def remove_point_inside_triangle():
@@ -20,31 +27,27 @@ def remove_point_inside_triangle():
 
 src, trg, triangles = parse_file('input_1.txt')
 t0 = time.time()
-points = set()
+points = []
+
 for t in triangles:
-    points = points.union(t.find_escaping_points(*t.get_vertices() ) )
+    esc_points = t.find_escaping_points()
+    #apply is_point_useful to all esc_points and all traingles
+    #add only those for which is_point_useful is True
+    is_point_useful(t, esc_points[0])
+    points.append(esc_points)
+
+points = list(itertools.chain.from_iterable(points))
 
 
-pool = Pool(cpu_count() -1)
-for t in triangles:
-    #map(remove_useless_points, points)
-    #useless_points = pool.map(remove_useless_points, [t]*len(points), points) # use starmap
-    useless_points = map(remove_useless_points, [t]*len(points), points)
-
-pool.close()
-
-useless_points = set(list(useless_points)  )
-useless_points.remove(None)
-points = points.union([src, trg])
-useful_points = (p for p in points if p not in useless_points)
+points.append(src)
+points.append(trg)
+print(len(points))
 
 print(time.time() -t0)
+t0 = time.time()
 
 
-print(len(list(useful_points)))
-
-
-G = graph.create(useful_points, triangles)
+G = graph.create(points)
 
 #if has_path(G, src, trg):
 #    pass
