@@ -7,7 +7,7 @@ import time, tqdm
 import itertools
 from networkx.algorithms import has_path
 
-src, trg, triangles = parse_file('input_1.txt')
+src, dest, triangles = parse_file('input_1.txt')
 t0 = time.time()
 points = []
 
@@ -20,8 +20,7 @@ for t in triangles:
 
 points = list(itertools.chain.from_iterable(points))
 
-points.append(src)
-points.append(trg)
+
 print(len(points))
 
 print(time.time()-t0)
@@ -31,12 +30,15 @@ s = set(points)
 
 print(len(s))
 
+s.add(src)
+s.add(dest)
+
 print(time.time()-t0)
 t0 = time.time()
 
 G = graph.create(points)
 
-#if has_path(G, src, trg):
+#if has_path(G, src, dest):
 #    pass
 
 
