@@ -7,19 +7,26 @@ import time, tqdm
 import itertools
 from networkx.algorithms import has_path
 
+
+def filter_points_in_triangle(point_list):
+    return lambda tr: filter(lambda x: ~tr.contains(x), point_list)
+
+
 src, dest, triangles = parse_file('input_1.txt')
 t0 = time.time()
 points = []
 
 for t in triangles:
     corners = t.surrounding_corners()
-    # todo:
-    # check t.contains(point) for all point in corners and all triangle t in triangles
-    # and append only the corners as said above
     points.append(corners)
 
 points = list(itertools.chain.from_iterable(points))
+print(len(points))
 
+print(time.time()-t0)
+t0 = time.time()
+
+points = list(map(filter_points_in_triangle(points), triangles))
 
 print(len(points))
 
