@@ -12,20 +12,29 @@ class Triangle:
     def bounding_box(self):
         max_coord = []
         min_coord = []
-        for coords in zip(*[self.v0, self.v1, self.v2]):
+        for coords in zip(*list(self.get_vertices())):
             max_coord.append(max(coords))
             min_coord.append(min(coords))
         return list(zip(min_coord, max_coord))
 
-    def contains(self, t):
+    def contains(self, point): ### todo and debug
         # type:(tuple)->bool
-        points = [ self.v0, self.v1, self.v2 ]
-        n = len(points)
+        vertices = list(self.get_vertices())
+        if point in vertices:
+            return True
+        n = len(vertices)
         inside = False
-        x,y = t
-        p1x, p1y = points[0]
+        x,y = point
+        ## check first the bounding box of the triangle
+        b_box = self.bounding_box()
+        Xmin, Xmax = b_box[0]
+        Ymin, Ymax = b_box[1]
+        if x < Xmin or x > Xmax or y < Ymin or y > Ymax:
+            # Definitely not within the polygon!
+            return False
+        p1x, p1y = vertices[0]
         for i in range(1, n + 1):
-            p2x, p2y = points[i % n]
+            p2x, p2y = vertices[i % n]
             if y > min(p1y, p2y):
                 if y <= max(p1y, p2y):
                     if x <= max(p1x, p2x):
@@ -36,16 +45,15 @@ class Triangle:
             p1x, p1y = p2x, p2y
         return inside
 
-    def find_escaping_points(self):
+    def surrounding_corners(self):
         # type:(tuple, tuple, tuple)->set
-        points = []
-        for v in [self.v0, self.v1, self.v2]:
+        surr_corners = []
+        for v in list(self.get_vertices()):
             x, y = v
             coordinates_x = [x - 1, x, x + 1]
             coordinates_y = [y - 1, y, y + 1]
 
-            for escape_p in zip(coordinates_x, coordinates_y):
-                if escape_p != (x,y):
-                    if not self.contains(escape_p):
-                        points.append(escape_p)
-        return points
+            for corner in itertools.product(coordinates_x, coordinates_y):
+                if not self.contains(corner):
+                    surr_corners.append(corner)
+        return surr_corners
