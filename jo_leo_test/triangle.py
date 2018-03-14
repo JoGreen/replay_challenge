@@ -1,4 +1,4 @@
-class triangle:
+class Triangle:
     def __init__(self, x0, y0, x1, y1, x2, y2):
         self.v0 = (x0,y0)
         self.v1 = (x1,y1)
@@ -36,8 +36,10 @@ class triangle:
 
             for px in coordinates_x:
                 for py in coordinates_y:
-                    if (px, py) != v:
-                        points.append((px, py))
+                    p = px, py
+                    if p != v:
+                        if not self.contains(p):
+                            points.append(p)
 
         points = set(points)
         return points

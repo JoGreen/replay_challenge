@@ -1,7 +1,8 @@
-from  jo_leo_test.triangle import triangle
+from  jo_leo_test.triangle import Triangle
 
 
 def parse_file(path):
+    #type:(str)-> Union(tuple, tuple, [Triangle])
     file = open(path, 'r')
     i = 0
     triangles = []
@@ -15,7 +16,7 @@ def parse_file(path):
             pass
         else:
             split = line.split(" ")
-            triangles.append(triangle(int(split[0]), int(split[1]), int(split[2]), int(split[3]), int(split[4]), int(split[5])))
+            triangles.append(Triangle(int(split[0]), int(split[1]), int(split[2]), int(split[3]), int(split[4]), int(split[5])))
         i += 1
     return source, target, triangles
 
